@@ -108,7 +108,7 @@ class Scanner {
         String text = source.substring(start, current);
         TokenType type = keywords.get(text);
         if (type == null) type = IDENTIFIER;
-        addToken(IDENTIFIER);
+        addToken(type);
     }
 
     private boolean isAlpha(char c) {
@@ -140,6 +140,11 @@ class Scanner {
                 Double.parseDouble(source.substring(start, current)));
     }
 
+    private char peek() {
+        if (isAtEnd()) return '\0';
+        return source.charAt(current);
+    }
+
     private char peekNext() {
         if (current + 1 >= source.length()) return '\0';
         return source.charAt(current + 1);
@@ -162,11 +167,6 @@ class Scanner {
         String value = source.substring(start + 1, current - 1);
 
         addToken(STRING, value);
-    }
-
-    private char peek() {
-        if (isAtEnd()) return '\0';
-        return source.charAt(current);
     }
 
     private boolean match(char expected) {
