@@ -69,36 +69,36 @@ class Scanner {
             case '<': addToken(match('=') ? LESS_EQUAL : LESS); break;
             case '>': addToken(match('=') ? GREATER_EQUAL : GREATER); break;
             case '/':
-                if (match('/')) {
-                    // A comment goes until the end of the line.
-                    while (peek() != '\n' && !isAtEnd()) advance();
-                } else {
-                    addToken(SLASH);
-                }
-                break;
+                      if (match('/')) {
+                          // A comment goes until the end of the line.
+                          while (peek() != '\n' && !isAtEnd()) advance();
+                      } else {
+                          addToken(SLASH);
+                      }
+                      break;
             case ' ':
             case '\r':
             case '\t':
-                // Ignore whitespace.
-                break;
+                      // Ignore whitespace.
+                      break;
             case '\n':
-                line++;
-                break;
+                      line++;
+                      break;
             case '"': string(); break;
             case 'o':
-                if (match('r')) {
-                    addToken(OR);
-                }
-                break;
+                      if (match('r')) {
+                          addToken(OR);
+                      }
+                      break;
             default:
-                if (isDigit(c)) {
-                    number();
-                } else if (isAlpha(c)) {
-                    identifier();
-                } else {
-                    Lox.error(line, "Unexpected character.");
-                }
-                break;
+                      if (isDigit(c)) {
+                          number();
+                      } else if (isAlpha(c)) {
+                          identifier();
+                      } else {
+                          Lox.error(line, "Unexpected character.");
+                      }
+                      break;
         }
     }
 
@@ -113,8 +113,8 @@ class Scanner {
 
     private boolean isAlpha(char c) {
         return (c >= 'a' && c <= 'z') ||
-                (c >= 'A' && c <= 'Z') ||
-                c == '_';
+            (c >= 'A' && c <= 'Z') ||
+            c == '_';
     }
 
     private boolean isAlphaNumeric(char c) {
