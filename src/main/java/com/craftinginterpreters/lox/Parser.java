@@ -20,7 +20,8 @@ class Parser {
     List<Stmt> statements = new ArrayList<>();
 
     while (!isAtEnd()) {
-      statements.add(statement());
+      statements.add(declaration());
+
     }
 
     return statements;
@@ -28,6 +29,24 @@ class Parser {
 
   private Expr expression() {
     return equality();
+  }
+
+  // This declaration() method is the method we call repeatedly when parsing a
+  // series of statements in a block or a script, so it’s the right place to
+  // synchronize when the parser goes into panic mode. The whole body of this
+  // method is wrapped in a try block to catch the exception thrown when the
+  // parser begins error recovery. This gets it back to trying to parse the
+  // beginning of the next statement or declaration.
+  private Stmt declaration() {
+    try {
+      if (match(VAR))
+        return varDeclaration();
+
+      return statement();
+    } catch (ParseError error) {
+      syncronize();
+      return null;
+    }
   }
 
   private Stmt statement() {
@@ -41,6 +60,18 @@ class Parser {
     Expr value = expression();
     consume(SEMICOLON, "Expect ';' after value.");
     return new Stmt.Print(value);
+  }
+
+  private Stmt varDeclaration() {
+    Token name = consume(IDENTIFIER, "Expect variable name.");
+
+    Expr initializer = null;
+    if (match(EQUAL)) {
+      initializer = expression();
+    }
+
+    consume(SEMICOLON, "Expect ';' after variable declaration.");
+    return new Stmt.Var(name, initializer);
   }
 
   private Stmt expressionStatement() {
@@ -117,6 +148,10 @@ class Parser {
 
     if (match(NUMBER, STRING)) {
       return new Expr.Literal(previous().literal);
+    }
+
+    if (match(IDENTIFIER)) {
+      return new Expr.Variable(previous());
     }
 
     if (match(LEFT_PAREN)) {
