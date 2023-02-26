@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoxTest {
 
-    @Test
-    public void testThatTrueIsTrue() {
-        assertThat(true).isEqualTo(true);
-    }
+  @Test
+  public void testThatTrueIsTrue() {
+    assertThat(true).isEqualTo(true);
+  }
 
 }
