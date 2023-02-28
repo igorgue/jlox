@@ -21,7 +21,6 @@ class Parser {
 
     while (!isAtEnd()) {
       statements.add(declaration());
-
     }
 
     return statements;
@@ -31,12 +30,6 @@ class Parser {
     return equality();
   }
 
-  // This declaration() method is the method we call repeatedly when parsing a
-  // series of statements in a block or a script, so it’s the right place to
-  // synchronize when the parser goes into panic mode. The whole body of this
-  // method is wrapped in a try block to catch the exception thrown when the
-  // parser begins error recovery. This gets it back to trying to parse the
-  // beginning of the next statement or declaration.
   private Stmt declaration() {
     try {
       if (match(VAR))
