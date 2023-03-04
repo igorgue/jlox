@@ -20,6 +20,7 @@ public class GenerateAst {
         "Unary    : Token operator, Expr right",
         "Variable : Token name"));
     defineAst(outputDir, "Stmt", Arrays.asList(
+        "Block      : List<Stmt> statements",
         "Expression : Expr expression",
         "Print      : Expr expression",
         "Var        : Token name, Expr initializer"));
