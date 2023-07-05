@@ -10,14 +10,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   private final Stack<Map<String, Boolean>> scopes = new Stack<>();
   private FunctionType currentFunction = FunctionType.NONE;
 
-  Resolver(Interpreter interpreter) {
-    this.interpreter = interpreter;
-  }
+  Resolver(Interpreter interpreter) { this.interpreter = interpreter; }
 
-  private enum FunctionType {
-    NONE,
-    FUNCTION
-  }
+  private enum FunctionType { NONE, FUNCTION, METHOD }
 
   void resolve(List<Stmt> statements) {
     for (Stmt statement : statements) {
@@ -25,13 +20,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
   }
 
-  private void resolve(Stmt stmt) {
-    stmt.accept(this);
-  }
+  private void resolve(Stmt stmt) { stmt.accept(this); }
 
-  private void resolve(Expr expr) {
-    expr.accept(this);
-  }
+  private void resolve(Expr expr) { expr.accept(this); }
 
   private void resolveFunction(Stmt.Function function, FunctionType type) {
     FunctionType enclosingFunction = currentFunction;
@@ -47,13 +38,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     currentFunction = enclosingFunction;
   }
 
-  private void beginScope() {
-    scopes.push(new HashMap<String, Boolean>());
-  }
+  private void beginScope() { scopes.push(new HashMap<String, Boolean>()); }
 
-  private void endScope() {
-    scopes.pop();
-  }
+  private void endScope() { scopes.pop(); }
 
   private void declare(Token name) {
     if (scopes.isEmpty())
@@ -61,7 +48,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     Map<String, Boolean> scope = scopes.peek();
     if (scope.containsKey(name.lexeme))
-      Lox.error(name, "Variable with this name already declared in this scope.");
+      Lox.error(name,
+                "Variable with this name already declared in this scope.");
 
     scope.put(name.lexeme, false);
   }
@@ -95,6 +83,11 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   public Void visitClassStmt(Stmt.Class stmt) {
     declare(stmt.name);
     define(stmt.name);
+
+    for (Stmt.Function method : stmt.methods) {
+      FunctionType declaration = FunctionType.METHOD;
+      resolveFunction(method, declaration);
+    }
 
     return null;
   }
@@ -216,8 +209,10 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
   @Override
   public Void visitVariableExpr(Expr.Variable expr) {
-    if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
-      Lox.error(expr.name, "Cannot read local variable in its own initializer.");
+    if (!scopes.isEmpty() &&
+        scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
+      Lox.error(expr.name,
+                "Cannot read local variable in its own initializer.");
     }
 
     resolveLocal(expr, expr.name);
