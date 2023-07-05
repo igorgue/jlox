@@ -1,5 +1,7 @@
 package com.craftinginterpreters.lox;
 
+import com.craftinginterpreters.lox.Expr.This;
+
 public class AstPrinter implements Expr.Visitor<String> {
   String print(Expr expr) {
     return expr.accept(this);
@@ -68,5 +70,11 @@ public class AstPrinter implements Expr.Visitor<String> {
   @Override
   public String visitSetExpr(Expr.Set expr) {
     return parenthesize(expr.name.lexeme, expr.object, expr.value);
+  }
+
+  @Override
+  public String visitThisExpr(This expr) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitThisExpr'");
   }
 }
