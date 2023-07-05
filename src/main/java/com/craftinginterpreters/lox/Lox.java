@@ -24,7 +24,9 @@ public class Lox {
     }
   }
 
-  static void error(int line, String message) { report(line, "", message); }
+  static void error(int line, String message) {
+    report(line, "", message);
+  }
 
   static void error(Token token, String message) {
     if (token.type == TokenType.EOF) {
@@ -74,12 +76,15 @@ public class Lox {
     if (hadError)
       return;
 
+    Resolver resolver = new Resolver(interpreter);
+    resolver.resolve(statements);
+
     interpreter.interpret(statements);
   }
 
   public static void runtimeError(RuntimeError error) {
     System.err.println(error.getMessage() + "\n[line " + error.token.line +
-                       "]");
+        "]");
     hadRuntimeError = true;
   }
 }
