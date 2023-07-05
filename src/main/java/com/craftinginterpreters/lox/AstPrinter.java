@@ -1,7 +1,5 @@
 package com.craftinginterpreters.lox;
 
-import com.craftinginterpreters.lox.Expr.Call;
-
 public class AstPrinter implements Expr.Visitor<String> {
   String print(Expr expr) {
     return expr.accept(this);
@@ -58,7 +56,17 @@ public class AstPrinter implements Expr.Visitor<String> {
   }
 
   @Override
-  public String visitCallExpr(Call expr) {
+  public String visitCallExpr(Expr.Call expr) {
     return parenthesize(expr.callee.toString(), (Expr[]) expr.arguments.toArray());
+  }
+
+  @Override
+  public String visitGetExpr(Expr.Get expr) {
+    return parenthesize(expr.name.lexeme, expr.object);
+  }
+
+  @Override
+  public String visitSetExpr(Expr.Set expr) {
+    return parenthesize(expr.name.lexeme, expr.object, expr.value);
   }
 }
