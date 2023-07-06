@@ -3,7 +3,7 @@ package com.craftinginterpreters.lox;
 import java.util.HashMap;
 import java.util.Map;
 
-class LoxInstance {
+public class LoxInstance {
   private LoxClass klass;
   private final Map<String, Object> fields = new HashMap<>();
 

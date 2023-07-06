@@ -3,9 +3,7 @@ package com.craftinginterpreters.lox;
 import com.craftinginterpreters.lox.Expr.This;
 
 public class AstPrinter implements Expr.Visitor<String> {
-  String print(Expr expr) {
-    return expr.accept(this);
-  }
+  String print(Expr expr) { return expr.accept(this); }
 
   @Override
   public String visitBinaryExpr(Expr.Binary expr) {
@@ -59,7 +57,8 @@ public class AstPrinter implements Expr.Visitor<String> {
 
   @Override
   public String visitCallExpr(Expr.Call expr) {
-    return parenthesize(expr.callee.toString(), (Expr[]) expr.arguments.toArray());
+    return parenthesize(expr.callee.toString(),
+                        (Expr[])expr.arguments.toArray());
   }
 
   @Override
@@ -74,7 +73,6 @@ public class AstPrinter implements Expr.Visitor<String> {
 
   @Override
   public String visitThisExpr(This expr) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitThisExpr'");
+    return expr.keyword.lexeme;
   }
 }
