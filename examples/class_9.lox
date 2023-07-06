@@ -1,0 +1,9 @@
+class Doughnut {
+  // General doughnut stuff...
+
+}
+
+
+class BostonCream < Doughnut {
+  // Boston Cream-specific stuff...
+}
