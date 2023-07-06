@@ -1,7 +1,5 @@
 package com.craftinginterpreters.lox;
 
-import com.craftinginterpreters.lox.Expr.This;
-
 public class AstPrinter implements Expr.Visitor<String> {
   String print(Expr expr) { return expr.accept(this); }
 
@@ -72,7 +70,12 @@ public class AstPrinter implements Expr.Visitor<String> {
   }
 
   @Override
-  public String visitThisExpr(This expr) {
+  public String visitThisExpr(Expr.This expr) {
+    return expr.keyword.lexeme;
+  }
+
+  @Override
+  public String visitSuperExpr(Expr.Super expr) {
     return expr.keyword.lexeme;
   }
 }
